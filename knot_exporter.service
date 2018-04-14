@@ -1,0 +1,15 @@
+[Unit]
+Description=Prometheus exporter for Knot DNS
+Documentation=https://github.com/ghedo/knot_exporter
+
+[Service]
+Restart=always
+User=prometheus
+Group=knot
+EnvironmentFile=/etc/default/knot_exporter
+ExecStart=/usr/bin/knot_exporter $ARGS
+TimeoutStopSec=20s
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target
