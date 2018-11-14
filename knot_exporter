@@ -450,6 +450,12 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
+        "--web-listen-addr",
+        default="127.0.0.1",
+        help="address on which to expose metrics."
+    )
+
+    parser.add_argument(
         "--web-listen-port",
         type=int,
         default=9433,
@@ -484,7 +490,7 @@ if __name__ == '__main__':
     ))
 
     httpd = http.server.HTTPServer(
-        ('127.0.0.1', args.web_listen_port),
+        (args.web_listen_addr, args.web_listen_port),
         MetricsHandler,
     )
 
