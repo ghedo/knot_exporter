@@ -1,6 +1,8 @@
 [Unit]
 Description=Prometheus exporter for Knot DNS
 Documentation=https://github.com/ghedo/knot_exporter
+After=knot.service
+Requires=knot.service
 
 [Service]
 Restart=always
