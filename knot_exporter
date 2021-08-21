@@ -424,8 +424,17 @@ class KnotCollector(object):
 
         for section, section_data in global_stats.items():
             for item, item_data in section_data.items():
-                name = ('knot_' + section + '_' + item).replace('-', '_')
-                yield GaugeMetricFamily(name, '', value=item_data)
+                if type(item_data) == dict:
+                    for kind, value in item_data.items():
+                        kind_sect = kind.lower()
+                        yield GaugeMetricFamily(
+                            (f"knot_{section}_{item}_{kind_sect}").replace('-', '_'),
+                            '',
+                            value
+                        )
+                else:
+                    name = ('knot_' + section + '_' + item).replace('-', '_')
+                    yield GaugeMetricFamily(name, '', value=item_data)
 
         # Get zone metrics.
         ctl.send_block(cmd="zone-stats", flags="F")
