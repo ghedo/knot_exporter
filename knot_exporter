@@ -4,7 +4,8 @@ from ctypes import cdll, c_void_p, c_int, c_char_p, c_uint, byref
 from enum import IntEnum
 
 import argparse
-import http.server
+import socket
+from http.server import HTTPServer
 
 from prometheus_client.core import REGISTRY
 from prometheus_client.core import GaugeMetricFamily
@@ -454,6 +455,9 @@ class KnotCollector(object):
                             m.add_metric([zone, section, kind], kind_data)
                             yield m
 
+class HTTPServerV6(HTTPServer):
+    address_family = socket.AF_INET6
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         formatter_class = argparse.ArgumentDefaultsHelpFormatter,
@@ -499,9 +503,15 @@ if __name__ == '__main__':
         args.knot_socket_timeout,
     ))
 
-    httpd = http.server.HTTPServer(
-        (args.web_listen_addr, args.web_listen_port),
-        MetricsHandler,
-    )
+    if ":" in args.web_listen_addr:
+        httpd = HTTPServerV6(
+            (args.web_listen_addr, args.web_listen_port),
+            MetricsHandler,
+        )
+    else:
+        httpd = HTTPServer(
+            (args.web_listen_addr, args.web_listen_port),
+            MetricsHandler,
+        )
 
     httpd.serve_forever()
