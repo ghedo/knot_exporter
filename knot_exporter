@@ -445,15 +445,10 @@ class KnotCollector(object):
             for zone, zone_data in zone_stats["zone"].items():
                 for section, section_data in zone_data.items():
                     for item, item_data in section_data.items():
-                        for kind, kind_data in item_data.items():
-                            if kind_data == 0:
-                                continue
-
-                            name = ('knot_' + item).replace('-', '_')
-                            m = GaugeMetricFamily(name, '',
-                                    labels=['zone', 'section', 'type'])
-                            m.add_metric([zone, section, kind], kind_data)
-                            yield m
+                        name = ('knot_' + item).replace('-', '_')
+                        m = GaugeMetricFamily(name, '', labels=['zone', 'section', 'type'])
+                        m.add_metric([zone, section, item], item_data)
+                        yield m
 
 class HTTPServerV6(HTTPServer):
     address_family = socket.AF_INET6
