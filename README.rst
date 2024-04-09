@@ -1,3 +1,7 @@
+> :warning: The Knot project provides an official exporter_ now, so this project has been archived.
+
+.. _exporter: https://github.com/CZ-NIC/knot/tree/master/python/knot_exporter
+
 knot_exporter
 =============
 
